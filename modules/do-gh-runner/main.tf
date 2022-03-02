@@ -74,7 +74,7 @@ data "digitalocean_images" "ubuntu" {
 }
 
 locals {
-  runner_name = var.runner_name != null ? var.runner_name : format("do-%s-gh-runner", replace(var.runner_scope, "/", "-"))
+  runner_name = var.runner_name != null ? var.runner_name : format("do-gh-runner-%s", replace(var.runner_scope, "/", "-"))
 }
 
 # Create a GitHub runner

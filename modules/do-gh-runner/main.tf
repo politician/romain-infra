@@ -59,17 +59,27 @@ data "digitalocean_images" "ubuntu" {
     values = ["Ubuntu"]
   }
   filter {
-    key      = "description"
-    values   = ["^Ubuntu .* x64$"]
-    match_by = "re"
-  }
-  filter {
     key    = "regions"
     values = [var.region]
   }
   sort {
     key       = "created"
     direction = "desc"
+  }
+
+  # TODO: Route through floating IP https://docs.digitalocean.com/products/networking/floating-ips/how-to/outbound-traffic/
+  # Auto-update the ubuntu image
+  # filter {
+  #   key      = "description"
+  #   values   = ["^Ubuntu .* x64$"]
+  #   match_by = "re"
+  # }
+
+  # But for now, don't auto-update the image because it will rotate the IP of the droplet
+  # and this IP will need to be whitelisted again with the various domain providers
+  filter {
+    key      = "description"
+    values   = ["Ubuntu 22.04 x64"]
   }
 }
 

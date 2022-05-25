@@ -1,41 +1,3 @@
-terraform {
-  required_providers {
-    digitalocean = {
-      source  = "digitalocean/digitalocean"
-      version = "~> 2.0"
-    }
-  }
-}
-
-# Define which region to use
-# https://docs.digitalocean.com/products/platform/availability-matrix/#available-datacenters
-variable "region" {
-  type    = string
-  default = "nyc1"
-}
-
-# SSH key fingerprint to admin the runner
-variable "ssh_key" {
-  type = string
-}
-
-# Name of the runner
-variable "runner_name" {
-  type    = string
-  default = null
-}
-
-# Runner registration repo/org
-variable "runner_scope" {
-  type = string
-}
-
-# Runner registration token
-# gh api -p everest -X POST repos/{owner}/{repo}/actions/runners/registration-token | jq .token
-variable "runner_token" {
-  type = string
-}
-
 # Get the cheapest droplet
 data "digitalocean_sizes" "main" {
   filter {
@@ -78,8 +40,8 @@ data "digitalocean_images" "ubuntu" {
   # But for now, don't auto-update the image because it will rotate the IP of the droplet
   # and this IP will need to be whitelisted again with the various domain providers
   filter {
-    key      = "description"
-    values   = ["Ubuntu 22.04 x64"]
+    key    = "description"
+    values = ["Ubuntu 22.04 x64"]
   }
 }
 
@@ -114,8 +76,17 @@ resource "digitalocean_droplet" "github_runner" {
   EOF
 }
 
+resource "digitalocean_project_resources" "project_resources" {
+  for_each = toset(var.do_project_id != null ? [var.do_project_id] : [])
+
+  project = var.do_project_id
+  resources = [
+    digitalocean_droplet.github_runner.urn
+  ]
+}
+
 output "ips" {
-  description = "Github runner IP addresses (ipv4 & ipv6)"
+  description = "Github runner IP addresses (ipv4 & ipv6)."
   value = {
     ipv4 = digitalocean_droplet.github_runner.ipv4_address
     ipv6 = digitalocean_droplet.github_runner.ipv6_address

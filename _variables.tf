@@ -44,3 +44,16 @@ variable "tfe_oauth_token_id" {
   description = "Terraform Cloud OAuth token id."
   type        = string
 }
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Project: domains
+# ---------------------------------------------------------------------------------------------------------------------
+variable "domains_runner_token" {
+  description = <<-EOF
+    Runner registration token. Get it with:
+    ```
+    gh api -p everest -X POST repos/{owner}/{repo}/actions/runners/registration-token \| jq .token
+    ```
+    EOF
+  type        = string
+}

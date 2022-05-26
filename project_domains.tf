@@ -19,12 +19,18 @@ module "domains" {
 # ---------------------------------------------------------------------------------------------------------------------
 # Github runner for domains repo
 module "gh_runner_domains" {
-  source = "./modules/github-runner-digitalocean"
+  source  = "politician/github-runner/digitalocean"
+  version = "1.0.0"
 
-  ssh_key       = "f8:6b:7b:4e:24:42:a9:9b:05:ec:94:53:b6:6c:27:f8"
-  runner_scope  = "politician/domains"
-  runner_token  = "AAYCM4BU5MNJKKSYOIYH2WDCD5KGA"
-  do_project_id = module.domains.do_project_id
+  ssh_key        = "f8:6b:7b:4e:24:42:a9:9b:05:ec:94:53:b6:6c:27:f8"
+  runner_scope   = "politician/domains"
+  runner_token   = var.domains_runner_token
+  add_to_project = true
+  do_project_id  = module.domains.do_project_id
+
+  # Make sure Ubuntu version is not auto-updated because it will rotate the IP of the droplet
+  # If this is the case this IP will need to be whitelisted again with the various domain providers
+  ubuntu_version = "^22\\.04 \\(LTS\\) x64$"
 }
 
 # ---------------------------------------------------------------------------------------------------------------------

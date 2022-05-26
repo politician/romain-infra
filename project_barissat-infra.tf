@@ -29,8 +29,8 @@ module "barissat-infra" {
   tfe_organization_name = var.tfe_organization_name
   tfe_oauth_token_id    = var.tfe_oauth_token_id
 
-  do_enabled = true
-
+  // During testing I ran into quota limits and can't close sub-accounts before 30 days
+  // Must disable AWS after June, 25th 2022 because I don't need it for this project
   aws_enabled       = true
   aws_account_email = "barissat-infra.aws.romain@${var.email_domain}"
   aws_admin_users = [

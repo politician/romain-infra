@@ -7,8 +7,8 @@ module "domains" {
   project_title = "Domain names manager"
   project_name  = "domains"
 
-  # kms_enabled     = true
-  # kms_keyring_id = google_kms_key_ring.romain.id
+  kms_enabled    = true
+  kms_keyring_id = google_kms_key_ring.global.id
 
   github_enabled = true
   do_enabled     = true
